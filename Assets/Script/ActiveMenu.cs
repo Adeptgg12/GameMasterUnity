@@ -31,16 +31,21 @@ public class ActiveMenu : MonoBehaviour
             score.SetActive(false);
             setting.SetActive(false);
 
+            AudioSystem.Instance.PlaySFX("Sfx_click");
         }
     }
-    public void ActiveUserpass() {
-        if (userpass.activeSelf != true && userpass.activeSelf != true) {
+    public void ActiveUserpass()
+    {
+        if (userpass.activeSelf != true && userpass.activeSelf != true)
+        {
             activeMenuisland1.SetActive(false);
             activeMenuisland2.SetActive(false);
             score.SetActive(false);
             islandonegamelist.SetActive(false);
             userpass.SetActive(true);
             setting.SetActive(false);
+
+            AudioSystem.Instance.PlaySFX("Sfx_click");
         }
     }
 
@@ -55,6 +60,7 @@ public class ActiveMenu : MonoBehaviour
             score.SetActive(true);
             setting.SetActive(false);
 
+            AudioSystem.Instance.PlaySFX("Sfx_click");
         }
     }
 
@@ -69,7 +75,7 @@ public class ActiveMenu : MonoBehaviour
             islandonegamelist.SetActive(true);
             setting.SetActive(false);
 
-
+            AudioSystem.Instance.PlaySFX("Sfx_click");
         }
     }
 
@@ -84,8 +90,7 @@ public class ActiveMenu : MonoBehaviour
             islandonegamelist.SetActive(false);
             setting.SetActive(true);
 
-
+            AudioSystem.Instance.PlaySFX("Sfx_click");
         }
     }
-
 }
