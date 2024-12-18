@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/StoryHTML.unity
     guid: 538138713d7ac1740875c608f86d5328
+  - enabled: 1
+    path: Assets/Scenes/TypingHtml.unity
+    guid: 6df5636aebd1f014787026b1f3e00f91
   m_configObjects: {}

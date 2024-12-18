@@ -11,6 +11,9 @@ public class TypingHtml : MonoBehaviour
     public UnityEngine.UI.Button buttonok;
     public TextMeshProUGUI wordOutput = null;
     public TextMeshProUGUI wpmOutput = null;
+
+    public TextMeshProUGUI wordIngame = null;
+    public TextMeshProUGUI wpmIngame = null;
     public TextMeshProUGUI accuracyOutput = null;
     public TextMeshProUGUI timerOutput = null; // UI for countdown timer
 
@@ -108,8 +111,9 @@ public class TypingHtml : MonoBehaviour
             ? ((float)correctTypedLetters / totalTypedLetters) * 100f
             : 0f;
 
-        wpmOutput.text = $"WPM: {wpm:F1}";
-        accuracyOutput.text = $"Accuracy: {accuracy:F1}%";
+        wpmIngame.text = $"WPM: {wpm:F1}";
+        wordIngame.text = $"ACC: {accuracy:F1}%";
+
         Debug.Log(wpmOutput.text = $"WPM: {wpm:F1}");
         Debug.Log(accuracyOutput.text = $"Accuracy: {accuracy:F1}%");
     }
