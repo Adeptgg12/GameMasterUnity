@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -16,9 +16,10 @@ public class TypingHtml : MonoBehaviour
     public TextMeshProUGUI wpmIngame = null;
     public TextMeshProUGUI accuracyOutput = null;
     public TextMeshProUGUI timerOutput = null; // UI for countdown timer
+    public WordBank WordBank = null;
 
     private string remainingWord = string.Empty;
-    private string currentWord = "testword";
+    private string currentWord = string.Empty;
 
     private float startTime;
     private float timeRemaining = 60f; // Total time in seconds
@@ -30,6 +31,13 @@ public class TypingHtml : MonoBehaviour
 
     private void Start()
     {
+        if (WordBank == null)
+        {
+            Debug.LogError("WordBank is not assigned.");
+            enabled = false;
+            return;
+        }
+
         buttonok.interactable = true;
         ScoreScreen.SetActive(false);
         startTime = Time.time;
@@ -38,8 +46,16 @@ public class TypingHtml : MonoBehaviour
 
     private void SetCurrentWord()
     {
-        // Get new word from a word bank (this is just a placeholder)
-        SetRemainingWord(currentWord);
+        currentWord = WordBank.GetWord();
+        if (!string.IsNullOrEmpty(currentWord))
+        {
+            SetRemainingWord(currentWord);
+        }
+        else
+        {
+            Debug.LogWarning("No more words available in WordBank.");
+            EndGame();
+        }
     }
 
     private void SetRemainingWord(string newString)
@@ -89,7 +105,10 @@ public class TypingHtml : MonoBehaviour
 
     private bool IsCorrectLetter(string letter)
     {
-        return remainingWord.IndexOf(letter) == 0;
+        if (string.IsNullOrEmpty(remainingWord))
+            return false;
+
+        return remainingWord[0].ToString().Equals(letter, StringComparison.OrdinalIgnoreCase);
     }
 
     private void RemoveLetter()
@@ -100,12 +119,14 @@ public class TypingHtml : MonoBehaviour
 
     private bool IsWordComplete()
     {
-        return remainingWord.Length == 0;
+        return string.IsNullOrEmpty(remainingWord);
     }
 
     private void UpdateStats()
     {
         float elapsedTime = Time.time - startTime;
+        if (elapsedTime == 0) elapsedTime = 1; // Avoid division by zero
+
         float wpm = (correctWords / (elapsedTime / 60f));
         float accuracy = (totalTypedLetters > 0)
             ? ((float)correctTypedLetters / totalTypedLetters) * 100f
@@ -133,6 +154,7 @@ public class TypingHtml : MonoBehaviour
 
     private void EndGame()
     {
+        isGameActive = false;
         ScoreScreen.SetActive(true);
         float elapsedTime = Time.time - startTime;
         float wpm = (correctWords / (elapsedTime / 60f));
@@ -140,13 +162,11 @@ public class TypingHtml : MonoBehaviour
             ? ((float)correctTypedLetters / totalTypedLetters) * 100f
             : 0f;
 
-        // Display WPM and Accuracy
-        wpmOutput.text = wpm.ToString("F1"); // Format to one decimal place
-        accuracyOutput.text = accuracy.ToString("F1"); // Add percentage symbol
+        wpmOutput.text = wpm.ToString("F1");
+        accuracyOutput.text = $"{accuracy:F1}%";
     }
 
-
-    public void loadScene()
+    public void LoadScene()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene(3);
     }
