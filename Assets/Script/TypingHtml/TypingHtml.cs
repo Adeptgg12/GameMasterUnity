@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.MemoryProfiler;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,7 +12,13 @@ public class TypingHtml : MonoBehaviour
     public UnityEngine.UI.Button buttonok;
     public TextMeshProUGUI wordOutput = null;
     public TextMeshProUGUI wpmOutput = null;
-
+    float wpm;
+    float accuracy;
+    private Connection connection; // connection string
+    string htmlspeed;
+    string htmlacc;
+    float htmlspeedint;
+    float htmlaccint;
     public TextMeshProUGUI wordIngame = null;
     public TextMeshProUGUI wpmIngame = null;
     public TextMeshProUGUI accuracyOutput = null;
@@ -22,6 +29,7 @@ public class TypingHtml : MonoBehaviour
     private string currentWord = string.Empty;
 
     private float startTime;
+    [SerializeField]
     private float timeRemaining = 60f; // Total time in seconds
     private int correctWords = 0;
     private int totalTypedLetters = 0;
@@ -127,8 +135,8 @@ public class TypingHtml : MonoBehaviour
         float elapsedTime = Time.time - startTime;
         if (elapsedTime == 0) elapsedTime = 1; // Avoid division by zero
 
-        float wpm = (correctWords / (elapsedTime / 60f));
-        float accuracy = (totalTypedLetters > 0)
+        wpm = (correctWords / (elapsedTime / 60f));
+        accuracy = (totalTypedLetters > 0)
             ? ((float)correctTypedLetters / totalTypedLetters) * 100f
             : 0f;
 
@@ -157,15 +165,88 @@ public class TypingHtml : MonoBehaviour
         isGameActive = false;
         ScoreScreen.SetActive(true);
         float elapsedTime = Time.time - startTime;
-        float wpm = (correctWords / (elapsedTime / 60f));
-        float accuracy = (totalTypedLetters > 0)
+        wpm = (correctWords / (elapsedTime / 60f));
+        accuracy = (totalTypedLetters > 0)
             ? ((float)correctTypedLetters / totalTypedLetters) * 100f
             : 0f;
 
-        wpmOutput.text = wpm.ToString("F1");
-        accuracyOutput.text = $"{accuracy:F1}%";
+        wpmOutput.text = wpm.ToString("F2");
+        accuracyOutput.text = $"{accuracy:F2}%";
+
+        //connect db
+        connection = new Connection();
+        StartCoroutine(TypingHtmlSpeedDb());
+        StartCoroutine(TypingAccSpeedDb());
+
+
     }
 
+    IEnumerator TypingHtmlSpeedDb()
+    {
+        WWW www = new WWW(connection.scoreMiniGameHtmlSpeed);
+        yield return www;
+        htmlspeed = www.text;
+        Debug.Log(htmlspeed);
+        if (htmlspeed != "None") {
+            htmlspeedint = float.Parse(htmlspeed);
+            if (htmlspeedint < wpm) {
+                StartCoroutine(UpdateSpeedHtml(wpm));
+                Debug.Log("htmlspeedint < wpm");
+            }
+        }
+        if (htmlspeed == "None") 
+        {
+            StartCoroutine(UpdateSpeedHtml(wpm));
+        }
+        
+        Debug.Log(htmlspeedint);
+
+
+
+    }
+
+    IEnumerator UpdateSpeedHtml(float speedhtml)
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("TypingHTMLSpeedscore", speedhtml.ToString("F2"));
+        WWW www = new WWW(connection.UpdateSpeedHtml, form);
+        yield return www;
+        Debug.Log(www.text);
+    }
+
+    IEnumerator TypingAccSpeedDb()
+    {
+        WWW www = new WWW(connection.scoreMiniGameHtmlACC);
+        yield return www;
+        htmlacc = www.text;
+        Debug.Log(htmlacc);
+        if (htmlacc != "None")
+        {
+            htmlaccint = float.Parse(htmlacc);
+            if (htmlaccint < accuracy)
+            {
+                Debug.Log("htmlaccint < accuracy");
+                StartCoroutine(UpdateAccHtml(accuracy));
+            }
+        }
+        if (htmlacc == "None")
+        {
+            StartCoroutine(UpdateAccHtml(accuracy));
+        }
+
+        Debug.Log(htmlacc);
+
+
+    }
+
+    IEnumerator UpdateAccHtml(float acchtml)
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("TypingHTMLACCscore", acchtml.ToString("F2"));
+        WWW www = new WWW(connection.UpdateAccHtml, form);
+        yield return www;
+        Debug.Log(www.text);
+    }
     public void LoadScene()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene(3);

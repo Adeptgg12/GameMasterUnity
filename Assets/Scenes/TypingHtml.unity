@@ -326,7 +326,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 1100, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &422568405
 MonoBehaviour:
@@ -547,7 +547,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1233442296}
         m_TargetAssemblyTypeName: TypingHtml, Assembly-CSharp
-        m_MethodName: loadScene
+        m_MethodName: LoadScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2564,6 +2564,10 @@ PrefabInstance:
       propertyPath: timerOutput
       value: 
       objectReference: {fileID: 1958031789}
+    - target: {fileID: 8656868632932180094, guid: 94d5004845b0cbd47b86203aaeb8a2dc, type: 3}
+      propertyPath: timeRemaining
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 8656868632932180094, guid: 94d5004845b0cbd47b86203aaeb8a2dc, type: 3}
       propertyPath: accuracyOutput
       value: 

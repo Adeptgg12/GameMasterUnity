@@ -14,8 +14,13 @@ public class Connection
 
 
     public string userstoryHTMLCSS = "http://localhost/unity/score/scoreStory.php";
-    public string scoreMiniGameHtmlSpeed = "http://localhost/unity/score/scorespeedhtml.php";
-    public string scoreMiniGameHtmlACC = "http://localhost/unity/score/scoreacchtml.php";
+
+    public string scoreMiniGameHtmlSpeed = "http://localhost/unity/score/scorespeedhtml.php"; //island 1
+    public string scoreMiniGameHtmlACC = "http://localhost/unity/score/scoreacchtml.php"; //island 1
+
+    public string UpdateSpeedHtml = "http://localhost/unity/addscore/updatespeedhtml.php"; //island 1 uppdate speed
+    public string UpdateAccHtml = "http://localhost/unity/addscore/updateacchtml.php"; //island 1 uppdate acc
+
     public string scoreMiniGameCSSSpeed = "http://localhost/unity/score/scorespeedCss.php";
     public string scoreMiniGameCSSACC = "http://localhost/unity/score/scoreaccCss.php";
     public string scoreMiniGameHTMLCSSSpeed = "http://localhost/unity/score/scorespeedHtmlCss.php";
