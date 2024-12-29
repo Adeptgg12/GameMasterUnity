@@ -2566,7 +2566,7 @@ PrefabInstance:
       objectReference: {fileID: 1958031789}
     - target: {fileID: 8656868632932180094, guid: 94d5004845b0cbd47b86203aaeb8a2dc, type: 3}
       propertyPath: timeRemaining
-      value: 5
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 8656868632932180094, guid: 94d5004845b0cbd47b86203aaeb8a2dc, type: 3}
       propertyPath: accuracyOutput

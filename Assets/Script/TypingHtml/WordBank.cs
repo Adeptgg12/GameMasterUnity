@@ -4,16 +4,12 @@ using UnityEngine;
 public class WordBank : MonoBehaviour
 {
     private List<string> originalWords = new List<string>() {
-        "apple", "banana", "orange", "pineapple", "strawberry", "blueberry",
-        "watermelon", "kiwi", "cherry", "mango", "coconut", "papaya",
-        "grape", "lemon", "lime", "peach", "plum", "pear", "apricot",
-        "avocado", "broccoli", "carrot", "lettuce", "spinach", "cucumber",
-        "tomato", "onion", "garlic", "potato", "mushroom", "school",
-        "teacher", "student", "library", "pencil", "eraser", "notebook",
-        "classroom", "backpack", "blackboard", "river", "mountain",
-        "forest", "ocean", "desert", "sunrise", "rainbow", "thunder",
-        "snowfall", "waterfall"
+    "<!DOCTYPE html>", "<html>", "</html>", "<head>", "</head>", "<title>", "</title>", "<body>", "</body>", "<h1>", "</h1>", "<h2>",
+    "</h2>", "<h3>", "</h3>", "<h4>", "</h4>", "<h5>", "</h5>", "<h6>", "</h6>", "<p>", "</p>", "<b>", "</b>", "<i>", "</i>", "<u>",
+    "</u>", "<s>", "</s>", "<del>", "</del>", "<strong>", "</strong>", "<em>", "</em>", "<br>", "<a>", "</a>", "<img>", "<form>",
+    "</form>", "<input>", "<label>", "</label>", "<button>", "</button>", "<style>", "</style>", "<link>", "<meta>", "<script>", "</script>"
     };
+
 
     private List<string> workingWords = new List<string>();
 

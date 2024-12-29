@@ -69,6 +69,7 @@ public class TypingHtml : MonoBehaviour
     private void SetRemainingWord(string newString)
     {
         remainingWord = newString;
+        wordOutput.richText = false;
         wordOutput.text = remainingWord;
     }
 
@@ -132,19 +133,20 @@ public class TypingHtml : MonoBehaviour
 
     private void UpdateStats()
     {
-        float elapsedTime = Time.time - startTime;
+        float elapsedTime = (Time.time - startTime) / 60f; // Convert to minutes
         if (elapsedTime == 0) elapsedTime = 1; // Avoid division by zero
 
-        wpm = (correctWords / (elapsedTime / 60f));
+        // Update WPM using the new formula (GWAM)
+        wpm = ((float)totalTypedLetters / 5f) / elapsedTime;
+
+        // Update accuracy
         accuracy = (totalTypedLetters > 0)
             ? ((float)correctTypedLetters / totalTypedLetters) * 100f
             : 0f;
 
+        // Update in-game UI
         wpmIngame.text = $"WPM: {wpm:F1}";
         wordIngame.text = $"ACC: {accuracy:F1}%";
-
-        Debug.Log(wpmOutput.text = $"WPM: {wpm:F1}");
-        Debug.Log(accuracyOutput.text = $"Accuracy: {accuracy:F1}%");
     }
 
     private void UpdateTimer()
@@ -164,88 +166,53 @@ public class TypingHtml : MonoBehaviour
     {
         isGameActive = false;
         ScoreScreen.SetActive(true);
-        float elapsedTime = Time.time - startTime;
-        wpm = (correctWords / (elapsedTime / 60f));
+
+        float elapsedTime = (Time.time - startTime) / 60f; // Convert to minutes
+
+        // Calculate final WPM using the new formula (GWAM)
+        wpm = ((float)totalTypedLetters / 5f) / elapsedTime;
+
+        // Calculate final accuracy
         accuracy = (totalTypedLetters > 0)
             ? ((float)correctTypedLetters / totalTypedLetters) * 100f
             : 0f;
 
+        // Update UI with final stats
         wpmOutput.text = wpm.ToString("F2");
-        accuracyOutput.text = $"{accuracy:F2}%";
+        accuracyOutput.text = $"{accuracy:F2}";
 
-        //connect db
+        // Connect to the database and update scores
         connection = new Connection();
-        StartCoroutine(TypingHtmlSpeedDb());
-        StartCoroutine(TypingAccSpeedDb());
-
-
+        StartCoroutine(UpdateBestScore(connection.scoreMiniGameHtmlSpeed, connection.UpdateSpeedHtml, wpm, accuracy));
     }
-
-    IEnumerator TypingHtmlSpeedDb()
+    IEnumerator UpdateBestScore(string getUrl, string updateUrl, float newWpm, float newAccuracy)
     {
-        WWW www = new WWW(connection.scoreMiniGameHtmlSpeed);
+        WWW www = new WWW(getUrl);
         yield return www;
-        htmlspeed = www.text;
-        Debug.Log(htmlspeed);
-        if (htmlspeed != "None") {
-            htmlspeedint = float.Parse(htmlspeed);
-            if (htmlspeedint < wpm) {
-                StartCoroutine(UpdateSpeedHtml(wpm));
-                Debug.Log("htmlspeedint < wpm");
-            }
-        }
-        if (htmlspeed == "None") 
+
+        if (string.IsNullOrEmpty(www.error))
         {
-            StartCoroutine(UpdateSpeedHtml(wpm));
-        }
-        
-        Debug.Log(htmlspeedint);
+            string serverScoreText = www.text;
+            Debug.Log($"Server WPM Score: {serverScoreText}");
 
-
-
-    }
-
-    IEnumerator UpdateSpeedHtml(float speedhtml)
-    {
-        WWWForm form = new WWWForm();
-        form.AddField("TypingHTMLSpeedscore", speedhtml.ToString("F2"));
-        WWW www = new WWW(connection.UpdateSpeedHtml, form);
-        yield return www;
-        Debug.Log(www.text);
-    }
-
-    IEnumerator TypingAccSpeedDb()
-    {
-        WWW www = new WWW(connection.scoreMiniGameHtmlACC);
-        yield return www;
-        htmlacc = www.text;
-        Debug.Log(htmlacc);
-        if (htmlacc != "None")
-        {
-            htmlaccint = float.Parse(htmlacc);
-            if (htmlaccint < accuracy)
+            if (serverScoreText == "None" || (float.TryParse(serverScoreText, out float serverWpm) && newWpm > serverWpm))
             {
-                Debug.Log("htmlaccint < accuracy");
-                StartCoroutine(UpdateAccHtml(accuracy));
+                WWWForm form = new WWWForm();
+                form.AddField("TypingHTMLSpeedscore", newWpm.ToString("F2"));
+                form.AddField("TypingHTMLACCscore", newAccuracy.ToString("F2"));
+                WWW updateRequest = new WWW(updateUrl, form);
+                yield return updateRequest;
+                Debug.Log($"Updated WPM and Accuracy: {updateRequest.text}");
+            }
+            else
+            {
+                Debug.Log($"Current server WPM ({serverWpm:F2}) is higher or equal to the new WPM ({newWpm:F2}).");
             }
         }
-        if (htmlacc == "None")
+        else
         {
-            StartCoroutine(UpdateAccHtml(accuracy));
+            Debug.LogError($"Error fetching WPM score: {www.error}");
         }
-
-        Debug.Log(htmlacc);
-
-
-    }
-
-    IEnumerator UpdateAccHtml(float acchtml)
-    {
-        WWWForm form = new WWWForm();
-        form.AddField("TypingHTMLACCscore", acchtml.ToString("F2"));
-        WWW www = new WWW(connection.UpdateAccHtml, form);
-        yield return www;
-        Debug.Log(www.text);
     }
     public void LoadScene()
     {
