@@ -21,6 +21,7 @@ public class login : MonoBehaviour
         registerButton.interactable = true;
         nameField.interactable = true;
         passwordField.interactable = true;
+        //AudioSystem.Instance.PlayMusic("MooDeng");
     }
     public void CallLogin()
     {

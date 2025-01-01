@@ -6,7 +6,7 @@ using UnityEditor.MemoryProfiler;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TypingHtml : MonoBehaviour
+public class TypingCss : MonoBehaviour
 {
     public GameObject ScoreScreen;
     public UnityEngine.UI.Button buttonok;
@@ -19,7 +19,7 @@ public class TypingHtml : MonoBehaviour
     public TextMeshProUGUI wpmIngame = null;
     public TextMeshProUGUI accuracyOutput = null;
     public TextMeshProUGUI timerOutput = null; // UI for countdown timer
-    public WordBank WordBank = null;
+    public WordBankCss WordBank = null;
     public bool isStart;
     private string remainingWord = string.Empty;
     private string currentWord = string.Empty;
@@ -35,6 +35,7 @@ public class TypingHtml : MonoBehaviour
 
     private void Start()
     {
+        isStart = false;
         if (WordBank == null)
         {
             Debug.LogError("WordBank is not assigned.");
@@ -77,8 +78,7 @@ public class TypingHtml : MonoBehaviour
             UpdateStats();
             UpdateTimer();
         }
-        if (Input.anyKeyDown)
-        {
+        if (Input.anyKeyDown) { 
             isStart = true;
         }
     }
@@ -163,10 +163,9 @@ public class TypingHtml : MonoBehaviour
 
             timerOutput.text = $"{timeRemaining:F1}s";
         }
-        else
-        {
+        else { 
         }
-
+        
     }
 
     private void EndGame()
@@ -190,7 +189,7 @@ public class TypingHtml : MonoBehaviour
 
         // Connect to the database and update scores
         connection = new Connection();
-        StartCoroutine(UpdateBestScore(connection.scoreMiniGameHtmlSpeed, connection.UpdateSpeedHtml, wpm, accuracy));
+        StartCoroutine(UpdateBestScore(connection.scoreMiniGameCSSSpeed, connection.UpdateSpeedCss, wpm, accuracy));
     }
     IEnumerator UpdateBestScore(string getUrl, string updateUrl, float newWpm, float newAccuracy)
     {
@@ -205,8 +204,8 @@ public class TypingHtml : MonoBehaviour
             if (serverScoreText == "None" || (float.TryParse(serverScoreText, out float serverWpm) && newWpm > serverWpm))
             {
                 WWWForm form = new WWWForm();
-                form.AddField("TypingHTMLSpeedscore", newWpm.ToString("F2"));
-                form.AddField("TypingHTMLACCscore", newAccuracy.ToString("F2"));
+                form.AddField("TypingCssSpeedscore", newWpm.ToString("F2"));
+                form.AddField("TypingCssACCscore", newAccuracy.ToString("F2"));
                 WWW updateRequest = new WWW(updateUrl, form);
                 yield return updateRequest;
                 Debug.Log($"Updated WPM and Accuracy: {updateRequest.text}");

@@ -3077,6 +3077,7 @@ GameObject:
   - component: {fileID: 436757036}
   - component: {fileID: 436757035}
   - component: {fileID: 436757037}
+  - component: {fileID: 436757038}
   m_Layer: 0
   m_Name: NextSceneScript
   m_TagString: Untagged
@@ -3125,6 +3126,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playGame: {fileID: 668183959}
+--- !u!114 &436757038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 436757034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c093dce686f47a44b9f82b7f1f52ab8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playGame: {fileID: 1142358190}
 --- !u!1 &442446767
 GameObject:
   m_ObjectHideFlags: 0
@@ -3386,7 +3400,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   musicSound:
   - name: MooDeng
-    clip: {fileID: 8300000, guid: 5871ca81de4895646b4d2d6f9e958695, type: 3}
+    clip: {fileID: 8300000, guid: 44100c11539f6524e82ce00c6fe79468, type: 3}
   sfxSound:
   - name: Sfx_click
     clip: {fileID: 8300000, guid: 5d151acce409afb4d886947f770643af, type: 3}
@@ -7690,7 +7704,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1142358191}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 436757038}
+        m_TargetAssemblyTypeName: nextMenuGame, Assembly-CSharp
+        m_MethodName: nextSceneMiniGameCssl
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1142358191
 MonoBehaviour:
   m_ObjectHideFlags: 0

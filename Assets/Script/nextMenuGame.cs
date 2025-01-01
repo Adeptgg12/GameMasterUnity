@@ -17,5 +17,8 @@ public class nextMenuGame : MonoBehaviour
     public void nextSceneMiniGameHtml()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene(5);
+    }public void nextSceneMiniGameCssl()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(6);
     }
 }

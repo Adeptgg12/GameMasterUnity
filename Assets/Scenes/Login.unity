@@ -2377,7 +2377,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   musicSound:
   - name: MooDeng
-    clip: {fileID: 8300000, guid: 5871ca81de4895646b4d2d6f9e958695, type: 3}
+    clip: {fileID: 8300000, guid: 44100c11539f6524e82ce00c6fe79468, type: 3}
   sfxSound:
   - name: Sfx_click
     clip: {fileID: 8300000, guid: 5d151acce409afb4d886947f770643af, type: 3}
