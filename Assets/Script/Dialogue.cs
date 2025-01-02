@@ -19,6 +19,12 @@ public class Dialogue : MonoBehaviour
     public Button inquest1;
     public Button inquest2;
     public Button inquest3;
+
+
+    //pause 
+    public GameObject menuPause;
+    private bool isMenuPauseActive = false;
+
     public string[] lines;
     public float textSpeed;
     private int index;
@@ -29,6 +35,7 @@ public class Dialogue : MonoBehaviour
         ex1.SetActive(false);
         BG1.SetActive(false);
         BG.SetActive(true);
+        menuPause.SetActive(false);
         gift.SetActive(false);
         storypart2.SetActive(false);
         textComponent.text = string.Empty;
@@ -38,6 +45,19 @@ public class Dialogue : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //puase esc menu
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (isMenuPauseActive)
+            {
+                ResumeGame(); // กด Esc อีกครั้งเพื่อ Resume
+            }
+            else
+            {
+                PauseGame(); // กด Esc เพื่อ Pause
+            }
+        }
+
         if (index == 15) {
             quest1.SetActive(true);
         }
@@ -49,7 +69,7 @@ public class Dialogue : MonoBehaviour
             index += 1;
         }
         if (index != 13 && index != 15 && index != 21) {
-            if (Input.GetMouseButtonDown(0))
+            if (!isMenuPauseActive && Input.GetMouseButtonDown(0))
             {
                 if (textComponent.text == lines[index])
                 {
@@ -59,7 +79,8 @@ public class Dialogue : MonoBehaviour
                 {
                     StopAllCoroutines();
                     textComponent.text = lines[index];
-                    
+
+
 
                 }
             }
@@ -68,6 +89,25 @@ public class Dialogue : MonoBehaviour
             ex1.SetActive(true);
         }
         
+    }
+    //menu setting
+    public void ResumeGame()
+    {
+        menuPause.SetActive(false); // ซ่อนเมนู Pause
+        Time.timeScale = 1f; // กลับมาเล่นเกมตามปกติ
+        isMenuPauseActive = false; // เปลี่ยนสถานะเป็นปิดเมนู
+    }
+
+    public void PauseGame()
+    {
+        menuPause.SetActive(true); // แสดงเมนู Pause
+        Time.timeScale = 0f; // หยุดการทำงานของเกม
+        isMenuPauseActive = true; // เปลี่ยนสถานะเป็นเปิดเมนู
+    }
+    public void nextSceneMainmenu()
+    {
+        ResumeGame();
+        UnityEngine.SceneManagement.SceneManager.LoadScene(3);
     }
 
     void StartDialogue() { 
