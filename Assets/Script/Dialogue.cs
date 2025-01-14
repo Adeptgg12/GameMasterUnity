@@ -1,9 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
-using Unity.VisualScripting;
 
 public class Dialogue : MonoBehaviour
 {
@@ -34,6 +32,7 @@ public class Dialogue : MonoBehaviour
 
     public string[] lines;
     public float textSpeed;
+    [SerializeField]
     private int index;
     // Start is called before the first frame update
     void Start()
@@ -93,7 +92,7 @@ public class Dialogue : MonoBehaviour
         {
             quest2.SetActive(true); //คำถาม
         }
-        if (index == 37)
+        if (index == 40)
         {
             ex2.SetActive(true);
         }
@@ -103,14 +102,16 @@ public class Dialogue : MonoBehaviour
                 if (textComponent.text == lines[index])
                 {
                     NextLine();
+                    if (index >= 66)
+                    {
+                        UnityEngine.SceneManagement.SceneManager.LoadScene(3);
+                        Debug.Log("ออกเกมจร้า");
+                    }
                 }
                 else
                 {
-                    StopAllCoroutines();
-                    textComponent.text = lines[index];
-
-
-
+                      StopAllCoroutines();
+                      textComponent.text = lines[index];
                 }
             }
         }
@@ -184,7 +185,7 @@ public class Dialogue : MonoBehaviour
     public void okBtnEx2()
     {
         ex2.SetActive(false);
-        index = 38;
+        index += 1;
     }
     public void correct()
     {

@@ -2612,7 +2612,7 @@ PrefabInstance:
       objectReference: {fileID: 1958031789}
     - target: {fileID: 8082125922076914968, guid: 0da9216205ac65342ac9cba229ee75fe, type: 3}
       propertyPath: timeRemaining
-      value: 3
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 8082125922076914968, guid: 0da9216205ac65342ac9cba229ee75fe, type: 3}
       propertyPath: accuracyOutput

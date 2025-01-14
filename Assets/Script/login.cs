@@ -1,15 +1,15 @@
 
 using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class login : MonoBehaviour
 {
     public LoginWarnning loginWarnning;
     public Button submitButton;
     public Button registerButton;
+    public GameObject btn_Exit;
     [SerializeField] public TMP_InputField nameField = default;
     [SerializeField] public TMP_InputField passwordField = default;
 
@@ -55,6 +55,12 @@ public class login : MonoBehaviour
 
     public void loadSceneRegister() {
         UnityEngine.SceneManagement.SceneManager.LoadScene(1);
+    }
+
+    public void ExitGame() 
+    {
+        Debug.Log("Exiting game...");
+        Application.Quit();
     }
 
 }
