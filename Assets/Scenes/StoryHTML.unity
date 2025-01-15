@@ -190,6 +190,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Okcontinued: {fileID: 1436280676}
+  gift: {fileID: 1436280676}
 --- !u!4 &24952750
 Transform:
   m_ObjectHideFlags: 0
@@ -707,18 +708,6 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 24952749}
         m_TargetAssemblyTypeName: AddKeyUser, Assembly-CSharp
-        m_MethodName: CallStorykey
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 24952749}
-        m_TargetAssemblyTypeName: AddKeyUser, Assembly-CSharp
         m_MethodName: OktoCon
         m_Mode: 1
         m_Arguments:
@@ -836,6 +825,7 @@ MonoBehaviour:
   inquest4: {fileID: 1421691510}
   inquest5: {fileID: 1787640571}
   inquest6: {fileID: 48917456}
+  addkey: {fileID: 24952749}
   menuPause: {fileID: 1588873913}
   lines:
   - "<b>\u0E19\u0E31\u0E01\u0E28\u0E36\u0E01\u0E29\u0E32:</b>  \u0E43\u0E19\u0E17\u0E35\u0E48\u0E2A\u0E38\u0E14\u0E01\u0E47\u0E16\u0E36\u0E07\u0E41\u0E25\u0E49\u0E27...
@@ -1466,7 +1456,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &695832032
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3321,7 +3311,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1436280677
 RectTransform:
   m_ObjectHideFlags: 0

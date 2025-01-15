@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -7,25 +8,56 @@ public class AddKeyUser : MonoBehaviour
     private int keyint;
     public GameObject Okcontinued;
     private Connection connection;
-    public async void CallStorykey()
+    public GameObject gift;
+
+
+    public async void CallStorykey(int number)
     {
+        Debug.Log("CallStorykey...");
         connection = new Connection();
-        StartCoroutine(StoryHTMLCSS());
+        StartCoroutine(StoryHTMLCSS(number));
 
     }
     ////////////////////////////////////////STORY////////////////////////////////////////////////////
-    IEnumerator StoryHTMLCSS()
+    IEnumerator StoryHTMLCSS(int number)
     {
         WWW www = new WWW(connection.storyHTMLCSS);
         yield return www;
         keystr = www.text;
         keyint = int.Parse(keystr);
-        keyint += 1;
-        Debug.Log("1."+keyint);
-        StartCoroutine(UpdateKey());
-        
+        CheckKey(number);
     }
-
+    public void CheckKey(int number)
+    {
+        Debug.Log("number = " + number);
+        Debug.Log("keyint = " + keyint);
+        if (number == 1)
+        {
+            if (keyint < 1)
+            {
+                Debug.Log("if1");
+                gift.SetActive(true);
+                keyint += 1;
+                Debug.Log(keyint);
+                StartCoroutine(UpdateKey());
+            }
+        }
+        else if (number == 2)
+        {
+            if (keyint < 2)
+            {
+                Debug.Log("if2");
+                gift.SetActive(true);
+                keyint += 1;
+                Debug.Log(keyint);
+                StartCoroutine(UpdateKey());
+            }
+        }
+        else
+        {
+            Okcontinued.SetActive(false);
+        }
+    }
 
     ////////////////////////////////////////Add Key////////////////////////////////////////////////////
     IEnumerator UpdateKey()

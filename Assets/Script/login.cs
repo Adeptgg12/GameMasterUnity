@@ -27,7 +27,7 @@ public class login : MonoBehaviour
     {
         connection = new Connection();
         StartCoroutine(Login());
-        AudioSystem.Instance.PlaySFX("Sfx_click");
+        //AudioSystem.Instance.PlaySFX("Sfx_click");
     }
 
     IEnumerator Login()

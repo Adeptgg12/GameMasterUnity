@@ -26,4 +26,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TypingCss.unity
     guid: d8be3662a1335ae479690c55420c2157
+  - enabled: 1
+    path: Assets/Scenes/TypingHtmlCss.unity
+    guid: f2c75a2d049f67645bef3126ea5b271c
   m_configObjects: {}

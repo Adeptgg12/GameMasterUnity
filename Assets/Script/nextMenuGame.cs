@@ -9,6 +9,7 @@ public class nextMenuGame : MonoBehaviour
     public void nextScene() {
         UnityEngine.SceneManagement.SceneManager.LoadScene(3);
     }
+
     public void nextSceneStoryHTML()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene(4);
@@ -17,7 +18,8 @@ public class nextMenuGame : MonoBehaviour
     public void nextSceneMiniGameHtml()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene(5);
-    }public void nextSceneMiniGameCssl()
+    }
+    public void nextSceneMiniGameCssl()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene(6);
     }

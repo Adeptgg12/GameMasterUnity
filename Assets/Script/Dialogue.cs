@@ -25,7 +25,7 @@ public class Dialogue : MonoBehaviour
     public Button inquest5;
     public Button inquest6;
 
-
+    public AddKeyUser addkey;
     //pause 
     public GameObject menuPause;
     private bool isMenuPauseActive = false;
@@ -67,18 +67,12 @@ public class Dialogue : MonoBehaviour
                 PauseGame(); // กด Esc เพื่อ Pause
             }
         }
-
         if (index == 5) {
             ex1.SetActive(true); //ตัวอย่าง
         }
         if (index == 7)
         {
             quest1.SetActive(true); //คำถาม
-        }
-
-        if (index == 8) {
-            gift.SetActive(true); //ของรางวัล
-            index += 1;
         }
         if (index == 14)
         {
@@ -189,8 +183,9 @@ public class Dialogue : MonoBehaviour
     }
     public void correct()
     {
+        index += 2;
         quest1.SetActive(false);
-        index += 1;
+        addkey.CallStorykey(1);
     }
     public void incorrect()
     {
@@ -201,7 +196,7 @@ public class Dialogue : MonoBehaviour
     {
         index += 1;
         quest2.SetActive(false);
-        gift.SetActive(true);
+        addkey.CallStorykey(2);
     }
 
     public void incorrect2()
