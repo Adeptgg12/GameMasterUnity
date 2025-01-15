@@ -16,6 +16,8 @@ public class Registration : MonoBehaviour
     private Connection connection;
     string password;
     int lenghtpassword;
+    string username;
+    int lenghtusername;
     public void Start()
     {
         submitButton.interactable = true;
@@ -34,42 +36,62 @@ public class Registration : MonoBehaviour
     {
         password = passwordField.text;
         lenghtpassword = password.Length;
+        username = nameField.text;
+        lenghtusername = username.Length;
 
-        if (passwordField.text == ConpasswordField.text)
-        {
-            if (lenghtpassword >= 8)
+        if (lenghtusername >= 4) {
+            if (passwordField.text == ConpasswordField.text)
             {
-                WWWForm form = new WWWForm();
-                form.AddField("Name", nameField.text);
-                form.AddField("Password", passwordField.text);
-                WWW www = new WWW(connection.register, form);
-                yield return www;
-                if (www.text == "0")
+                if (lenghtpassword >= 8)
                 {
-                    Debug.Log("User create successful");
-                    StartCoroutine(registerWarning.registerSuc("User create successful"));
-                    submitButton.interactable = false;
-                    backButton.interactable = false;
-                    nameField.interactable = false;
-                    passwordField.interactable = false;
-                    ConpasswordField.interactable = false;
+                    WWWForm form = new WWWForm();
+                    form.AddField("Name", nameField.text);
+                    form.AddField("Password", passwordField.text);
+                    WWW www = new WWW(connection.register, form);
+                    yield return www;
+                    if (www.text == "0")
+                    {
+                        Debug.Log("User create successful");
+                        StartCoroutine(registerWarning.registerSuc("User create successful"));
+                        submitButton.interactable = false;
+                        backButton.interactable = false;
+                        nameField.interactable = false;
+                        passwordField.interactable = false;
+                        ConpasswordField.interactable = false;
+                    }
+                    else
+                    {
+                        Debug.Log("User create fail" + www.text);
+                        if (www.text == "Name already exit") {
+                            StartCoroutine(registerWarning.cooldown("UserName Already exist!!"));
+                        }
+                        else
+                        {
+                            StartCoroutine(registerWarning.cooldown("User create fail!!"));
+                        }
+                        
+                    }
                 }
                 else
                 {
-                    Debug.Log("User create fail" + www.text);
-                    StartCoroutine(registerWarning.cooldown("User create fail"));
+                    Debug.Log("password more than 8 word");
+                    StartCoroutine(registerWarning.cooldown("Password more than 8 word"));
                 }
+
             }
-            else {
-                Debug.Log("password more than 8 word");
-                StartCoroutine(registerWarning.cooldown("Password more than 8 word"));
+            else
+            {
+                StartCoroutine(registerWarning.cooldown("Password not match"));
+                Debug.Log("Password not match");
             }
-           
+
         }
-        else {
-            StartCoroutine (registerWarning.cooldown("Password not match"));
+        else
+        {
+            StartCoroutine(registerWarning.cooldown("Username more than 4 word"));
             Debug.Log("Password not match");
         }
+        
        
     }
     public void loadScene(int a) {
