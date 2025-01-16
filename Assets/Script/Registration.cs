@@ -49,7 +49,8 @@ public class Registration : MonoBehaviour
                     form.AddField("Password", passwordField.text);
                     WWW www = new WWW(connection.register, form);
                     yield return www;
-                    if (www.text == "0")
+                    int result = int.Parse(www.text);
+                    if (result == 0)
                     {
                         Debug.Log("User create successful");
                         StartCoroutine(registerWarning.registerSuc("User create successful"));
@@ -67,6 +68,7 @@ public class Registration : MonoBehaviour
                         }
                         else
                         {
+                            Debug.Log("User create fail ===>" + www.text);
                             StartCoroutine(registerWarning.cooldown("User create fail!!"));
                         }
                         

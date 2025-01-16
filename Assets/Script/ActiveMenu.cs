@@ -1,7 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.MemoryProfiler;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -107,11 +104,11 @@ public class ActiveMenu : MonoBehaviour
             if (keyint >= 2) {
                 island2.interactable = true;
             }
-            if (keyint >= 4)
+            if (keyint >= 2)
             {
                 island3.interactable = true;
             }
-            if (keyint >= 6)
+            if (keyint >= 2)
             {
                 island4.interactable = true;
             }
