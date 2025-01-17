@@ -53,6 +53,17 @@ public class AddKeyUser : MonoBehaviour
                 StartCoroutine(UpdateKey());
             }
         }
+        else if (number == 3)
+        {
+            if (keyint < 3)
+            {
+                Debug.Log("if3");
+                gift.SetActive(true);
+                keyint += 1;
+                Debug.Log(keyint);
+                StartCoroutine(UpdateKey());
+            }
+        }
         else
         {
             Okcontinued.SetActive(false);
