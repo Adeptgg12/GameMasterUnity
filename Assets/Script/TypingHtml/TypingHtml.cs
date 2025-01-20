@@ -259,18 +259,21 @@ public class TypingHtml : MonoBehaviour
 
         wpmOutput.text = wpm.ToString("F2");
         accuracyOutput.text = $"{accuracy:F2}";
-
+        connection = new Connection();
         StartCoroutine(UpdateBestScore(connection.scoreMiniGameHtmlSpeed, connection.UpdateSpeedHtml, wpm, accuracy));
     }
 
     IEnumerator UpdateBestScore(string getUrl, string updateUrl, float newWpm, float newAccuracy)
     {
         UnityWebRequest www = UnityWebRequest.Get(getUrl);
+        www.SetRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
         yield return www.SendWebRequest();
 
         if (www.result == UnityWebRequest.Result.Success)
         {
             string serverScoreText = www.downloadHandler.text;
+            Debug.Log($"Server WPM Score: {serverScoreText}");
+
             if (serverScoreText == "None" || (float.TryParse(serverScoreText, out float serverWpm) && newWpm > serverWpm))
             {
                 WWWForm form = new WWWForm();
@@ -278,8 +281,26 @@ public class TypingHtml : MonoBehaviour
                 form.AddField("TypingHTMLACCscore", newAccuracy.ToString("F2"));
 
                 UnityWebRequest updateRequest = UnityWebRequest.Post(updateUrl, form);
+                updateRequest.SetRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
                 yield return updateRequest.SendWebRequest();
+
+                if (updateRequest.result == UnityWebRequest.Result.Success)
+                {
+                    Debug.Log($"Updated WPM and Accuracy: {updateRequest.downloadHandler.text}");
+                }
+                else
+                {
+                    Debug.LogError($"Error updating scores: {updateRequest.error}");
+                }
             }
+            else
+            {
+                Debug.Log($"Current server WPM ({serverWpm:F2}) is higher or equal to the new WPM ({newWpm:F2}).");
+            }
+        }
+        else
+        {
+            Debug.LogError($"Error fetching WPM score: {www.error}");
         }
     }
 
