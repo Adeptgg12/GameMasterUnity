@@ -260,7 +260,7 @@ public class TypingHtml : MonoBehaviour
         wpmOutput.text = wpm.ToString("F2");
         accuracyOutput.text = $"{accuracy:F2}";
 
-        //StartCoroutine(UpdateBestScore())
+        StartCoroutine(UpdateBestScore(connection.scoreMiniGameHtmlSpeed, connection.UpdateSpeedHtml, wpm, accuracy));
     }
 
     IEnumerator UpdateBestScore(string getUrl, string updateUrl, float newWpm, float newAccuracy)
