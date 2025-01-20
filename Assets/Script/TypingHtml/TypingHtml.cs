@@ -9,27 +9,28 @@ public class TypingHtml : MonoBehaviour
     public GameObject ScoreScreen;
     public UnityEngine.UI.Button buttonok;
     public TextMeshProUGUI wordOutput = null;
+    public TextMeshProUGUI typedWordOutput = null; // แสดงข้อความที่ผู้ใช้พิมพ์
     public TextMeshProUGUI wpmOutput = null;
-    float wpm;
-    float accuracy;
-    private Connection connection; // connection string
+    public TextMeshProUGUI accuracyOutput = null;
+    public TextMeshProUGUI timerOutput = null;
     public TextMeshProUGUI wordIngame = null;
     public TextMeshProUGUI wpmIngame = null;
-    public TextMeshProUGUI accuracyOutput = null;
-    public TextMeshProUGUI timerOutput = null; // UI for countdown timer
     public WordBank WordBank = null;
-    public bool isStart;
+    private Connection connection;
+
+    private float wpm;
+    private float accuracy;
     private string remainingWord = string.Empty;
     private string currentWord = string.Empty;
-
+    private string typedLetters = "";  // เก็บข้อความที่ผู้ใช้พิมพ์
     private float startTime;
-    [SerializeField]
-    private float timeRemaining = 60f; // Total time in seconds
+    private float timeRemaining = 60f;
     private int correctWords = 0;
     private int totalTypedLetters = 0;
     private int correctTypedLetters = 0;
-
-    private bool isGameActive = true; // To check if the game is still active
+    private bool isGameActive = true;
+    private bool isStart = false;
+    private bool isCorrect = false;
 
     private void Start()
     {
@@ -52,6 +53,8 @@ public class TypingHtml : MonoBehaviour
         if (!string.IsNullOrEmpty(currentWord))
         {
             SetRemainingWord(currentWord);
+            typedLetters = "";  // เคลียร์ข้อความที่พิมพ์แล้ว
+            UpdateTypedWordDisplay();
         }
         else
         {
@@ -86,10 +89,20 @@ public class TypingHtml : MonoBehaviour
         if (Input.anyKeyDown)
         {
             string keysPressed = Input.inputString;
-
+            
             if (keysPressed.Length == 1)
             {
+                /*if (typedLetters.Length < currentWord.Length && typedLetters[typedLetters.Length - 1] == currentWord[typedLetters.Length - 1])
+                {
+                    isCorrect = true;
+                }
+                else
+                {
+                    isCorrect = false;
+                }*/
+                Debug.Log(keysPressed);
                 EnterLetter(keysPressed);
+
             }
         }
     }
@@ -97,19 +110,63 @@ public class TypingHtml : MonoBehaviour
     private void EnterLetter(string typedLetter)
     {
         totalTypedLetters++;
+
+        // ถ้าเป็นตัวอักษรที่ถูกต้อง
         if (IsCorrectLetter(typedLetter))
         {
             correctTypedLetters++;
-            RemoveLetter();
+            // เพิ่มตัวอักษรที่ถูกต้องลงใน typedLetters
+            typedLetters += typedLetter;
 
+
+            // ถ้าคำเสร็จแล้ว
             if (IsWordComplete())
             {
                 correctWords++;
                 SetCurrentWord();
             }
         }
+        else
+        {
+            // ถ้าพิมพ์ผิด ต้องรอให้พิมพ์ตัวที่ถูกต้องแล้วจึงจะลบ
+            if (typedLetters.Length < currentWord.Length && typedLetters[typedLetters.Length - 1] != currentWord[typedLetters.Length - 1])
+            {
+                // แทนที่ตัวที่ผิดด้วยตัวที่พิมพ์ใหม่
+
+                typedLetters = typedLetters.Substring(0, typedLetters.Length - 1) + typedLetter;
+            }
+            else
+            {
+                RemoveLetter();
+                typedLetters += typedLetter; // เพิ่มตัวอักษรที่ผิด
+            }
+        }
+
+        // อัปเดตการแสดงผลข้อความที่พิมพ์
+        UpdateTypedWordDisplay();
     }
 
+    private void UpdateTypedWordDisplay()
+    {
+        string displayText = "";
+
+        // ตรวจสอบแต่ละตัวอักษร
+        for (int i = 0; i < typedLetters.Length; i++)
+        {
+            // เปรียบเทียบตัวที่พิมพ์กับคำที่ต้องพิมพ์
+            if (i < currentWord.Length && typedLetters[i] == currentWord[i])
+            {
+                displayText += "<color=green>" + typedLetters[i] + "</color>";  // สีเขียวถ้าถูก
+            }
+            else if (i < currentWord.Length && typedLetters[i] != currentWord[i])
+            {
+                displayText += "<color=red>" + typedLetters[i] + "</color>";  // สีแดงถ้าผิด
+            }
+        }
+
+        // แสดงข้อความในช่องแสดงผล
+        typedWordOutput.text = displayText;
+    }
     private bool IsCorrectLetter(string letter)
     {
         if (string.IsNullOrEmpty(remainingWord))
@@ -120,8 +177,11 @@ public class TypingHtml : MonoBehaviour
 
     private void RemoveLetter()
     {
-        string newString = remainingWord.Remove(0, 1);
-        SetRemainingWord(newString);
+        if (remainingWord.Length > 0)
+        {
+            remainingWord = remainingWord.Substring(1);
+            wordOutput.text = remainingWord;  // อัปเดตคำที่เหลือ
+        }
     }
 
     private bool IsWordComplete()
@@ -131,25 +191,19 @@ public class TypingHtml : MonoBehaviour
 
     private void UpdateStats()
     {
-        float elapsedTime = (Time.time - startTime) / 60f; // Convert to minutes
-        if (elapsedTime == 0) elapsedTime = 1; // Avoid division by zero
+        float elapsedTime = (Time.time - startTime) / 60f;
+        if (elapsedTime == 0) elapsedTime = 1;
 
-        // Update WPM using the new formula (GWAM)
         wpm = ((float)totalTypedLetters / 5f) / elapsedTime;
+        accuracy = (totalTypedLetters > 0) ? ((float)correctTypedLetters / totalTypedLetters) * 100f : 0f;
 
-        // Update accuracy
-        accuracy = (totalTypedLetters > 0)
-            ? ((float)correctTypedLetters / totalTypedLetters) * 100f
-            : 0f;
-
-        // Update in-game UI
         wpmIngame.text = $"WPM: {wpm:F1}";
         wordIngame.text = $"ACC: {accuracy:F1}%";
     }
 
     private void UpdateTimer()
     {
-        if (isStart == true)
+        if (isStart)
         {
             timeRemaining -= Time.deltaTime;
             if (timeRemaining <= 0)
@@ -161,46 +215,31 @@ public class TypingHtml : MonoBehaviour
 
             timerOutput.text = $"{timeRemaining:F1}s";
         }
-        else
-        {
-        }
-
     }
+
 
     private void EndGame()
     {
         isGameActive = false;
         ScoreScreen.SetActive(true);
 
-        float elapsedTime = (Time.time - startTime) / 60f; // Convert to minutes
+        float elapsedTime = (Time.time - startTime) / 60f;
 
-        // Calculate final WPM using the new formula (GWAM)
         wpm = ((float)totalTypedLetters / 5f) / elapsedTime;
+        accuracy = (totalTypedLetters > 0) ? ((float)correctTypedLetters / totalTypedLetters) * 100f : 0f;
 
-        // Calculate final accuracy
-        accuracy = (totalTypedLetters > 0)
-            ? ((float)correctTypedLetters / totalTypedLetters) * 100f
-            : 0f;
-
-        // Update UI with final stats
         wpmOutput.text = wpm.ToString("F2");
         accuracyOutput.text = $"{accuracy:F2}";
-
-        // Connect to the database and update scores
-        connection = new Connection();
-        StartCoroutine(UpdateBestScore(connection.scoreMiniGameHtmlSpeed, connection.UpdateSpeedHtml, wpm, accuracy));
     }
+
     IEnumerator UpdateBestScore(string getUrl, string updateUrl, float newWpm, float newAccuracy)
     {
         UnityWebRequest www = UnityWebRequest.Get(getUrl);
-        www.SetRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
         yield return www.SendWebRequest();
 
         if (www.result == UnityWebRequest.Result.Success)
         {
             string serverScoreText = www.downloadHandler.text;
-            Debug.Log($"Server WPM Score: {serverScoreText}");
-
             if (serverScoreText == "None" || (float.TryParse(serverScoreText, out float serverWpm) && newWpm > serverWpm))
             {
                 WWWForm form = new WWWForm();
@@ -208,28 +247,11 @@ public class TypingHtml : MonoBehaviour
                 form.AddField("TypingHTMLACCscore", newAccuracy.ToString("F2"));
 
                 UnityWebRequest updateRequest = UnityWebRequest.Post(updateUrl, form);
-                updateRequest.SetRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
                 yield return updateRequest.SendWebRequest();
-
-                if (updateRequest.result == UnityWebRequest.Result.Success)
-                {
-                    Debug.Log($"Updated WPM and Accuracy: {updateRequest.downloadHandler.text}");
-                }
-                else
-                {
-                    Debug.LogError($"Error updating scores: {updateRequest.error}");
-                }
             }
-            else
-            {
-                Debug.Log($"Current server WPM ({serverWpm:F2}) is higher or equal to the new WPM ({newWpm:F2}).");
-            }
-        }
-        else
-        {
-            Debug.LogError($"Error fetching WPM score: {www.error}");
         }
     }
+
     public void LoadScene()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene(3);
