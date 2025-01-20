@@ -1,8 +1,8 @@
-
 using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
 public class login : MonoBehaviour
 {
@@ -21,13 +21,12 @@ public class login : MonoBehaviour
         registerButton.interactable = true;
         nameField.interactable = true;
         passwordField.interactable = true;
-        //AudioSystem.Instance.PlayMusic("MooDeng");
     }
+
     public void CallLogin()
     {
         connection = new Connection();
         StartCoroutine(Login());
-        //AudioSystem.Instance.PlaySFX("Sfx_click");
     }
 
     IEnumerator Login()
@@ -35,9 +34,17 @@ public class login : MonoBehaviour
         WWWForm form = new WWWForm();
         form.AddField("Name", nameField.text);
         form.AddField("Password", passwordField.text);
-        WWW www = new WWW(connection.loginLink, form);
-        yield return www;
-        if (www.text == "0")
+
+        UnityWebRequest request = UnityWebRequest.Post(connection.loginLink, form);
+
+        // เพิ่ม HTTP headers เช่น Authorization หรือ Content-Type
+        request.SetRequestHeader("User-Agent",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
+
+
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success && request.downloadHandler.text == "0")
         {
             Debug.Log("User login successful");
             StartCoroutine(loginWarnning.loginSuc("User login successful"));
@@ -48,19 +55,19 @@ public class login : MonoBehaviour
         }
         else
         {
-            Debug.Log("User login fail" + www.text);
-            StartCoroutine(loginWarnning.loginFai("User login fail" + www.text));
+            Debug.Log("User login fail: " + request.downloadHandler.text);
+            StartCoroutine(loginWarnning.loginFai("User login fail: " + request.downloadHandler.text));
         }
     }
 
-    public void loadSceneRegister() {
+    public void loadSceneRegister()
+    {
         UnityEngine.SceneManagement.SceneManager.LoadScene(1);
     }
 
-    public void ExitGame() 
+    public void ExitGame()
     {
         Debug.Log("Exiting game...");
         Application.Quit();
     }
-
 }

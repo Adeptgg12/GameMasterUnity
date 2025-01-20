@@ -1,9 +1,8 @@
-
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Networking;
 
 public class Registration : MonoBehaviour
 {
@@ -18,6 +17,7 @@ public class Registration : MonoBehaviour
     int lenghtpassword;
     string username;
     int lenghtusername;
+
     public void Start()
     {
         submitButton.interactable = true;
@@ -26,6 +26,7 @@ public class Registration : MonoBehaviour
         passwordField.interactable = true;
         ConpasswordField.interactable = true;
     }
+
     public void CallRegister()
     {
         connection = new Connection();
@@ -39,7 +40,8 @@ public class Registration : MonoBehaviour
         username = nameField.text;
         lenghtusername = username.Length;
 
-        if (lenghtusername >= 4) {
+        if (lenghtusername >= 4)
+        {
             if (passwordField.text == ConpasswordField.text)
             {
                 if (lenghtpassword >= 8)
@@ -47,31 +49,47 @@ public class Registration : MonoBehaviour
                     WWWForm form = new WWWForm();
                     form.AddField("Name", nameField.text);
                     form.AddField("Password", passwordField.text);
-                    WWW www = new WWW(connection.register, form);
-                    yield return www;
-                    int result = int.Parse(www.text);
-                    if (result == 0)
+
+                    // Using UnityWebRequest instead of WWW
+                    UnityWebRequest www = UnityWebRequest.Post(connection.register, form);
+
+                    // Set the User-Agent header
+                    www.SetRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
+
+                    yield return www.SendWebRequest();
+
+                    if (www.result == UnityWebRequest.Result.Success)
                     {
-                        Debug.Log("User create successful");
-                        StartCoroutine(registerWarning.registerSuc("User create successful"));
-                        submitButton.interactable = false;
-                        backButton.interactable = false;
-                        nameField.interactable = false;
-                        passwordField.interactable = false;
-                        ConpasswordField.interactable = false;
-                    }
-                    else
-                    {
-                        Debug.Log("User create fail" + www.text);
-                        if (www.text == "Name already exit") {
-                            StartCoroutine(registerWarning.cooldown("UserName Already exist!!"));
+                        string responseText = www.downloadHandler.text;
+                        Debug.Log(responseText);
+                        int result = int.Parse(responseText);
+                        if (result == 0)
+                        {
+                            Debug.Log("User create successful");
+                            StartCoroutine(registerWarning.registerSuc("User create successful"));
+                            submitButton.interactable = false;
+                            backButton.interactable = false;
+                            nameField.interactable = false;
+                            passwordField.interactable = false;
+                            ConpasswordField.interactable = false;
                         }
                         else
                         {
-                            Debug.Log("User create fail ===>" + www.text);
-                            StartCoroutine(registerWarning.cooldown("User create fail!!"));
+                            Debug.Log("User create fail" + www.downloadHandler.text);
+                            if (www.downloadHandler.text == "Name already exit")
+                            {
+                                StartCoroutine(registerWarning.cooldown("UserName Already exist!!"));
+                            }
+                            else
+                            {
+                                Debug.Log("User create fail ===>" + www.downloadHandler.text);
+                                StartCoroutine(registerWarning.cooldown("User create fail!!"));
+                            }
                         }
-                        
+                    }
+                    else
+                    {
+                        Debug.LogError("Request failed: " + www.error);
                     }
                 }
                 else
@@ -91,14 +109,13 @@ public class Registration : MonoBehaviour
         else
         {
             StartCoroutine(registerWarning.cooldown("Username more than 4 word"));
-            Debug.Log("Password not match");
+            Debug.Log("Username not valid");
         }
-        
-       
     }
-    public void loadScene(int a) {
+
+    public void loadScene(int a)
+    {
         UnityEngine.SceneManagement.SceneManager.LoadScene(a);
         Debug.Log("test");
     }
-
 }

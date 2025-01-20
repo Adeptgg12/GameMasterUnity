@@ -1,7 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class UserScore : MonoBehaviour
 {
@@ -25,79 +25,142 @@ public class UserScore : MonoBehaviour
         StartCoroutine(ScoreMiniGameHTMLCSSSpeed());
         StartCoroutine(ScoreMiniGameHTMLCSSACC());
         StartCoroutine(StoryHTMLCSS());
-
     }
+
     ////////////////////////////////////////STORY////////////////////////////////////////////////////
     IEnumerator StoryHTMLCSS()
     {
-        WWW www = new WWW(connection.userstoryHTMLCSS);
-        yield return www;
-        Debug.Log(www.text);
-        textScoreKey.text = www.text;
-        textScoreKey.color = Color.black;
+        UnityWebRequest www = UnityWebRequest.Get(connection.userstoryHTMLCSS);
+        www.SetRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
 
+        yield return www.SendWebRequest();
+
+        if (www.result == UnityWebRequest.Result.Success)
+        {
+            Debug.Log(www.downloadHandler.text);
+            textScoreKey.text = www.downloadHandler.text;
+            textScoreKey.color = Color.black;
+        }
+        else
+        {
+            Debug.LogError("Failed to fetch story: " + www.error);
+        }
     }
 
     ////////////////////////////////////////MINIGAME HTML////////////////////////////////////////////////////
+    IEnumerator ScoreMiniGameHtmlSpeed()
+    {
+        UnityWebRequest www = UnityWebRequest.Get(connection.scoreMiniGameHtmlSpeed);
+        www.SetRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
 
-    IEnumerator ScoreMiniGameHtmlSpeed() {
-        WWW www = new WWW(connection.scoreMiniGameHtmlSpeed);
-        yield return www;
+        yield return www.SendWebRequest();
 
-        Debug.Log(www.text);
-        textScoreSpeedhtml.text = www.text;
-        textScoreSpeedhtml.color = Color.black;
-
+        if (www.result == UnityWebRequest.Result.Success)
+        {
+            Debug.Log(www.downloadHandler.text);
+            textScoreSpeedhtml.text = www.downloadHandler.text;
+            textScoreSpeedhtml.color = Color.black;
+        }
+        else
+        {
+            Debug.LogError("Failed to fetch HTML speed score: " + www.error);
+        }
     }
+
     IEnumerator ScoreMiniGameHtmlACC()
     {
-        WWW www = new WWW(connection.scoreMiniGameHtmlACC);
-        yield return www;
-        Debug.Log(www.text);
-        textScoreacchtml.text = www.text;
-        textScoreacchtml.color = Color.black;
+        UnityWebRequest www = UnityWebRequest.Get(connection.scoreMiniGameHtmlACC);
+        www.SetRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
 
+        yield return www.SendWebRequest();
+
+        if (www.result == UnityWebRequest.Result.Success)
+        {
+            Debug.Log(www.downloadHandler.text);
+            textScoreacchtml.text = www.downloadHandler.text;
+            textScoreacchtml.color = Color.black;
+        }
+        else
+        {
+            Debug.LogError("Failed to fetch HTML ACC score: " + www.error);
+        }
     }
-    //////////////////////////////////////////MINIGAME CSS//////////////////////////////////////////////////////
+
+    //////////////////////////////////////////MINIGAME CSS////////////////////////////////////////////////////
     IEnumerator ScoreMiniGameCSSSpeed()
     {
-        WWW www = new WWW(connection.scoreMiniGameCSSSpeed);
-        yield return www;
+        UnityWebRequest www = UnityWebRequest.Get(connection.scoreMiniGameCSSSpeed);
+        www.SetRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
 
-        Debug.Log(www.text);
-        textScoreSpeedCSS.text = www.text;
-        textScoreSpeedCSS.color = Color.black;
+        yield return www.SendWebRequest();
 
+        if (www.result == UnityWebRequest.Result.Success)
+        {
+            Debug.Log(www.downloadHandler.text);
+            textScoreSpeedCSS.text = www.downloadHandler.text;
+            textScoreSpeedCSS.color = Color.black;
+        }
+        else
+        {
+            Debug.LogError("Failed to fetch CSS speed score: " + www.error);
+        }
     }
+
     IEnumerator ScoreMiniGameCSSACC()
     {
-        WWW www = new WWW(connection.scoreMiniGameCSSACC);
-        yield return www;
-        Debug.Log(www.text);
-        textScoreaccCSS.text = www.text;
-        textScoreaccCSS.color = Color.black;
+        UnityWebRequest www = UnityWebRequest.Get(connection.scoreMiniGameCSSACC);
+        www.SetRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
 
+        yield return www.SendWebRequest();
+
+        if (www.result == UnityWebRequest.Result.Success)
+        {
+            Debug.Log(www.downloadHandler.text);
+            textScoreaccCSS.text = www.downloadHandler.text;
+            textScoreaccCSS.color = Color.black;
+        }
+        else
+        {
+            Debug.LogError("Failed to fetch CSS ACC score: " + www.error);
+        }
     }
-    //////////////////////////////////////////MINIGAME HTML CSS//////////////////////////////////////////////////////
 
+    //////////////////////////////////////////MINIGAME HTML CSS////////////////////////////////////////////////////
     IEnumerator ScoreMiniGameHTMLCSSSpeed()
     {
-        WWW www = new WWW(connection.scoreMiniGameHTMLCSSSpeed);
-        yield return www;
+        UnityWebRequest www = UnityWebRequest.Get(connection.scoreMiniGameHTMLCSSSpeed);
+        www.SetRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
 
-        Debug.Log(www.text);
-        textScoreSpeedHTMLCSS.text = www.text;
-        textScoreSpeedHTMLCSS.color = Color.black;
+        yield return www.SendWebRequest();
 
+        if (www.result == UnityWebRequest.Result.Success)
+        {
+            Debug.Log(www.downloadHandler.text);
+            textScoreSpeedHTMLCSS.text = www.downloadHandler.text;
+            textScoreSpeedHTMLCSS.color = Color.black;
+        }
+        else
+        {
+            Debug.LogError("Failed to fetch HTML CSS speed score: " + www.error);
+        }
     }
+
     IEnumerator ScoreMiniGameHTMLCSSACC()
     {
-        WWW www = new WWW(connection.scoreMiniGameHTMLCSSACC);
-        yield return www;
-        Debug.Log(www.text);
-        textScoreaccHTMLCSS.text = www.text;
-        textScoreaccHTMLCSS.color = Color.black;
+        UnityWebRequest www = UnityWebRequest.Get(connection.scoreMiniGameHTMLCSSACC);
+        www.SetRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
 
+        yield return www.SendWebRequest();
+
+        if (www.result == UnityWebRequest.Result.Success)
+        {
+            Debug.Log(www.downloadHandler.text);
+            textScoreaccHTMLCSS.text = www.downloadHandler.text;
+            textScoreaccHTMLCSS.color = Color.black;
+        }
+        else
+        {
+            Debug.LogError("Failed to fetch HTML CSS ACC score: " + www.error);
+        }
     }
-
 }

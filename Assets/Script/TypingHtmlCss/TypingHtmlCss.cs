@@ -2,6 +2,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class TypingHtmlCsss : MonoBehaviour
 {
@@ -191,12 +192,13 @@ public class TypingHtmlCsss : MonoBehaviour
     }
     IEnumerator UpdateBestScore(string getUrl, string updateUrl, float newWpm, float newAccuracy)
     {
-        WWW www = new WWW(getUrl);
-        yield return www;
+        UnityWebRequest www = UnityWebRequest.Get(getUrl);
+        www.SetRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
+        yield return www.SendWebRequest();
 
-        if (string.IsNullOrEmpty(www.error))
+        if (www.result == UnityWebRequest.Result.Success)
         {
-            string serverScoreText = www.text;
+            string serverScoreText = www.downloadHandler.text;
             Debug.Log($"Server WPM Score: {serverScoreText}");
 
             if (serverScoreText == "None" || (float.TryParse(serverScoreText, out float serverWpm) && newWpm > serverWpm))
@@ -204,9 +206,19 @@ public class TypingHtmlCsss : MonoBehaviour
                 WWWForm form = new WWWForm();
                 form.AddField("TypingHTMLCssSpeedscore", newWpm.ToString("F2"));
                 form.AddField("TypingHTMLCssACCscore", newAccuracy.ToString("F2"));
-                WWW updateRequest = new WWW(updateUrl, form);
-                yield return updateRequest;
-                Debug.Log($"Updated WPM and Accuracy: {updateRequest.text}");
+
+                UnityWebRequest updateRequest = UnityWebRequest.Post(updateUrl, form);
+                updateRequest.SetRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
+                yield return updateRequest.SendWebRequest();
+
+                if (updateRequest.result == UnityWebRequest.Result.Success)
+                {
+                    Debug.Log($"Updated WPM and Accuracy: {updateRequest.downloadHandler.text}");
+                }
+                else
+                {
+                    Debug.LogError($"Error updating scores: {updateRequest.error}");
+                }
             }
             else
             {

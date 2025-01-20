@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
 public class ActiveMenu : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class ActiveMenu : MonoBehaviour
     string keystr;
     private int keyint;
     private Connection connection;
+
     public void Start()
     {
         Key();
@@ -30,18 +32,33 @@ public class ActiveMenu : MonoBehaviour
         islandonegamelist.SetActive(false);
         setting.SetActive(false);
     }
+
     public async void Key()
     {
         connection = new Connection();
         StartCoroutine(StoryHTMLCSS());
     }
+
     IEnumerator StoryHTMLCSS()
     {
-        WWW www = new WWW(connection.storyHTMLCSS);
-        yield return www;
-        keystr = www.text;
-        keyint = int.Parse(keystr);
+        // Use UnityWebRequest to set headers
+        UnityWebRequest www = UnityWebRequest.Get(connection.storyHTMLCSS);
+        www.SetRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
+
+        // Wait until the request is completed
+        yield return www.SendWebRequest();
+
+        if (www.result == UnityWebRequest.Result.Success)
+        {
+            keystr = www.downloadHandler.text;
+            keyint = int.Parse(keystr);
+        }
+        else
+        {
+            Debug.LogError("Request failed: " + www.error);
+        }
     }
+
     public void ActiveIsland()
     {
         if (activeMenuisland1.activeSelf != true && activeMenuisland2.activeSelf != true)
@@ -56,6 +73,7 @@ public class ActiveMenu : MonoBehaviour
             AudioSystem.Instance.PlaySFX("Sfx_click");
         }
     }
+
     public void ActiveUserpass()
     {
         if (userpass.activeSelf != true && userpass.activeSelf != true)
@@ -101,7 +119,8 @@ public class ActiveMenu : MonoBehaviour
             setting.SetActive(false);
 
             AudioSystem.Instance.PlaySFX("Sfx_click");
-            if (keyint >= 2) {
+            if (keyint >= 2)
+            {
                 island2.interactable = true;
             }
             if (keyint >= 2)
@@ -130,7 +149,8 @@ public class ActiveMenu : MonoBehaviour
         }
     }
 
-    public void nextSceneIsland2MiniGame() {
+    public void nextSceneIsland2MiniGame()
+    {
         UnityEngine.SceneManagement.SceneManager.LoadScene(7);
     }
 }
