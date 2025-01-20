@@ -3,9 +3,11 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class TypingHtml : MonoBehaviour
 {
+    [Header("Component")]
     public GameObject ScoreScreen;
     public UnityEngine.UI.Button buttonok;
     public TextMeshProUGUI wordOutput = null;
@@ -21,8 +23,8 @@ public class TypingHtml : MonoBehaviour
     private float wpm;
     private float accuracy;
     private string remainingWord = string.Empty;
-    private string currentWord = string.Empty;
-    private string typedLetters = "";  // เก็บข้อความที่ผู้ใช้พิมพ์
+    [SerializeField] string currentWord = string.Empty;
+    [SerializeField] string typedLetters = "";  // เก็บข้อความที่ผู้ใช้พิมพ์
     private float startTime;
     private float timeRemaining = 60f;
     private int correctWords = 0;
@@ -30,7 +32,7 @@ public class TypingHtml : MonoBehaviour
     private int correctTypedLetters = 0;
     private bool isGameActive = true;
     private bool isStart = false;
-    private bool isCorrect = false;
+    private bool isCorrect = true;
 
     private void Start()
     {
@@ -86,23 +88,24 @@ public class TypingHtml : MonoBehaviour
 
     private void CheckInput()
     {
-        if (Input.anyKeyDown)
+        if (Input.anyKeyDown && !Input.GetKeyDown(KeyCode.Backspace))
         {
             string keysPressed = Input.inputString;
-            
+
             if (keysPressed.Length == 1)
             {
-                /*if (typedLetters.Length < currentWord.Length && typedLetters[typedLetters.Length - 1] == currentWord[typedLetters.Length - 1])
+                char keyCheck = keysPressed[0];
+                char wordIn = wordOutput.text[0];
+                if (keyCheck == wordIn)
                 {
-                    isCorrect = true;
+                    EnterLetter(keysPressed);
+                    Debug.Log("Correct");
                 }
                 else
                 {
-                    isCorrect = false;
-                }*/
-                Debug.Log(keysPressed);
-                EnterLetter(keysPressed);
-
+                    EnterLetter(keysPressed);
+                    Debug.Log("Incorrect");
+                }
             }
         }
     }
@@ -114,34 +117,60 @@ public class TypingHtml : MonoBehaviour
         // ถ้าเป็นตัวอักษรที่ถูกต้อง
         if (IsCorrectLetter(typedLetter))
         {
-            correctTypedLetters++;
-            // เพิ่มตัวอักษรที่ถูกต้องลงใน typedLetters
-            typedLetters += typedLetter;
-
-
-            // ถ้าคำเสร็จแล้ว
-            if (IsWordComplete())
+            if (isCorrect)
             {
-                correctWords++;
-                SetCurrentWord();
+                correctTypedLetters++;
+                // เพิ่มตัวอักษรที่ถูกต้องลงใน typedLetters
+                typedLetters += typedLetter;
+                RemoveLetter();
+
+                // ถ้าคำเสร็จแล้ว
+                if (IsWordComplete())
+                {
+                    correctWords++;
+                    SetCurrentWord();
+                }
+            }
+            else
+            {
+                typedLetters = typedLetters.Substring(0, typedLetters.Length - 1);
+
+                correctTypedLetters++;
+                // เพิ่มตัวอักษรที่ถูกต้องลงใน typedLetters
+                typedLetters += typedLetter;
+                RemoveLetter();
+
+                // ถ้าคำเสร็จแล้ว
+                if (IsWordComplete())
+                {
+                    correctWords++;
+                    SetCurrentWord();
+                }
+                isCorrect = true;
             }
         }
         else
         {
+            isCorrect = false;
             // ถ้าพิมพ์ผิด ต้องรอให้พิมพ์ตัวที่ถูกต้องแล้วจึงจะลบ
-            if (typedLetters.Length < currentWord.Length && typedLetters[typedLetters.Length - 1] != currentWord[typedLetters.Length - 1])
+            if (typedLetters == "")
             {
-                // แทนที่ตัวที่ผิดด้วยตัวที่พิมพ์ใหม่
-
-                typedLetters = typedLetters.Substring(0, typedLetters.Length - 1) + typedLetter;
+                typedLetters += typedLetter;
             }
             else
             {
-                RemoveLetter();
-                typedLetters += typedLetter; // เพิ่มตัวอักษรที่ผิด
+                if (typedLetters.Length < currentWord.Length && typedLetters[typedLetters.Length - 1] != currentWord[typedLetters.Length - 1])
+                {
+                    // แทนที่ตัวที่ผิดด้วยตัวที่พิมพ์ใหม่
+                    typedLetters = typedLetters.Substring(0, typedLetters.Length - 1) + typedLetter;
+                }
+                else
+                {
+                    //RemoveLetter();
+                    typedLetters += typedLetter; // เพิ่มตัวอักษรที่ผิด
+                }
             }
         }
-
         // อัปเดตการแสดงผลข้อความที่พิมพ์
         UpdateTypedWordDisplay();
     }
@@ -230,6 +259,8 @@ public class TypingHtml : MonoBehaviour
 
         wpmOutput.text = wpm.ToString("F2");
         accuracyOutput.text = $"{accuracy:F2}";
+
+        //StartCoroutine(UpdateBestScore())
     }
 
     IEnumerator UpdateBestScore(string getUrl, string updateUrl, float newWpm, float newAccuracy)
