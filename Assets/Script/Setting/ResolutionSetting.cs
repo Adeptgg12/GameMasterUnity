@@ -71,9 +71,9 @@ public class ResolutionSetting : MonoBehaviour
     {
         width = PlayerPrefs.GetInt("ResolutionWidth", 1920); // Default 1920x1080
         height = PlayerPrefs.GetInt("ResolutionHeight", 1080);
-        isFullscreen = PlayerPrefs.GetInt("IsFullscreen", 0) == 1;
+        isFullscreen = PlayerPrefs.GetInt("IsFullscreen") != 0; 
         resolutionDropDown.value = PlayerPrefs.GetInt("DropDownValue", 0);
-
+        
 
         isUpdating = true; // ป้องกันการกระตุ้นซ้ำ
         toggleFullscreen.isOn = isFullscreen; // ตั้งค่า Toggle
