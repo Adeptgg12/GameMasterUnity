@@ -58,7 +58,7 @@ public class WordManager2 : MonoBehaviour
 
 	public void AddWord()
 	{
-		Word word = new Word(WordGenerator.GetRandomWord(), wordSpawner.SpawnWord());
+		Word word = new Word(WordGenerator2.GetRandomWord(), wordSpawner.SpawnWord());
 		//Debug.Log(word.word);
 
 		words.Add(word);
