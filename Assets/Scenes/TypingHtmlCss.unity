@@ -2739,6 +2739,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TyperHtmlCss
       objectReference: {fileID: 0}
+    - target: {fileID: 5686945597239728751, guid: b3db9c628d56b0143b00c7b710868895, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2755,6 +2759,10 @@ PrefabInstance:
     - target: {fileID: 4061963176521001809, guid: b1e8dd0e683133a438b3a02748357a59, type: 3}
       propertyPath: m_Name
       value: WordBankHtmlCss
+      objectReference: {fileID: 0}
+    - target: {fileID: 4061963176521001809, guid: b1e8dd0e683133a438b3a02748357a59, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7322214897677297009, guid: b1e8dd0e683133a438b3a02748357a59, type: 3}
       propertyPath: m_LocalPosition.x
