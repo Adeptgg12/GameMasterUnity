@@ -82,7 +82,7 @@ public class WordManager : MonoBehaviour
 			isStart = true;
 		}
 
-		if (hasActiveWord)
+		if (hasActiveWord && isGameActive)
 		{
 			//ใส่ Letter หลังจากตัวแรก
 			if (activeWord.GetNextLetter() == letter)
@@ -100,8 +100,8 @@ public class WordManager : MonoBehaviour
 				Debug.Log("Not correct");
 			}
 		}
-		else
-		{
+        else if (!hasActiveWord && isGameActive)
+        {
 			if (words[0].GetNextLetter() == letter)
 			{
 				activeWord = words[0];

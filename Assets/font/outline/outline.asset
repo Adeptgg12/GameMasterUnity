@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
-  m_Name: ChangaOne-Regular SDF
+  m_Name: outline
   m_EditorClassIdentifier: 
-  hashCode: 1340894592
+  hashCode: 667421760
   material: {fileID: 7517765601736545027}
-  materialHashCode: -1635137248
+  materialHashCode: -1376633760
   m_Version: 1.1.0
   m_SourceFontFileGUID: 472e05d46076a2d48a8be9512a6407a3
   m_SourceFontFile_EditorRef: {fileID: 12800000, guid: 472e05d46076a2d48a8be9512a6407a3, type: 3}
@@ -2592,7 +2592,7 @@ Material:
     - _OutlineSoftness: 0
     - _OutlineUVSpeedX: 0
     - _OutlineUVSpeedY: 0
-    - _OutlineWidth: 0
+    - _OutlineWidth: 0.5
     - _PerspectiveFilter: 0.875
     - _Reflectivity: 10
     - _ScaleRatioA: 0.9

@@ -66,17 +66,17 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: pie
+  m_text: <b>
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 47667a1b943a32647a982fa8fb9d7284, type: 2}
-  m_sharedMaterial: {fileID: 7517765601736545027, guid: 47667a1b943a32647a982fa8fb9d7284, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 7a369a85449a0624080af1f1d0c58635, type: 2}
+  m_sharedMaterial: {fileID: 7517765601736545027, guid: 7a369a85449a0624080af1f1d0c58635, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278216703
+  m_fontColor: {r: 1, g: 0.40392157, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -99,7 +99,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 0
   m_fontSizeMax: 0
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -117,7 +117,7 @@ MonoBehaviour:
   m_enableKerning: 0
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
-  m_isRichText: 1
+  m_isRichText: 0
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
