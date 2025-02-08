@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.Networking;
+using UnityEngine.UIElements;
 
 public class WordManager2 : MonoBehaviour
 {
@@ -193,7 +194,6 @@ public class WordManager2 : MonoBehaviour
 		wpmOutputEnd.text = wpm.ToString("F2");
 		accuracyOutputEnd.text = $"{accuracy:F2}";
         connection = new Connection();
-        //StartCoroutine(UpdateBestScore())
         StartCoroutine(UpdateBestScore(connection.scoreMiniGameHTMLCSSSpeed, connection.UpdateSpeedHtmlCss, wpm, accuracy));
     }
     #endregion

@@ -12,11 +12,14 @@ public class Dialogue2 : MonoBehaviour
     public GameObject menuPause;
     private bool isMenuPauseActive = false;
     public GameObject ex01;
+    public GameObject ex02;
     public GameObject BG1;
     public GameObject BG2;
     public GameObject Give;
     public GameObject incorrect_txt;
+    public GameObject incorrect_txt2;
     public TMP_InputField EX01InputField;
+    public TMP_InputField EX02InputField;
     public AddKeyUser addkey;
     public string[] lines;
     public float textSpeed;
@@ -29,8 +32,10 @@ public class Dialogue2 : MonoBehaviour
         BG1.SetActive(true);
         Give.SetActive(false);
         incorrect_txt.SetActive(false);
+        incorrect_txt2.SetActive(false);
         BG2.SetActive(false);
         ex01.SetActive(false);
+        ex02.SetActive(false);
         menuPause.SetActive(false);
         linesLength = lines.Length;
         textComponent.text = string.Empty;
@@ -45,6 +50,10 @@ public class Dialogue2 : MonoBehaviour
         {
             ex01.SetActive(true);
         }
+        if (index == 29)
+        {
+            ex02.SetActive(true);
+        }
         //puase esc menu
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -58,7 +67,7 @@ public class Dialogue2 : MonoBehaviour
             }
         }
 
-        if (ex01.activeSelf != true && Give.activeSelf != true)
+        if (ex01.activeSelf != true && Give.activeSelf != true && ex02.activeSelf != true)
         {
             if (!isMenuPauseActive && Input.GetMouseButtonDown(0))
             {
@@ -126,6 +135,23 @@ public class Dialogue2 : MonoBehaviour
         else
         {
             incorrect_txt.SetActive(true);
+        }
+    }
+    public void Checkex02()
+    {
+        string answeruser = EX02InputField.text;
+        string answeruserlower = answeruser.ToLower();
+        string answer = "background-color";
+
+        if (answeruserlower == answer)
+        {
+            ex02.SetActive(false);
+            addkey.CallStorykey(4);
+            index += 1;
+        }
+        else
+        {
+            incorrect_txt2.SetActive(true);
         }
     }
 

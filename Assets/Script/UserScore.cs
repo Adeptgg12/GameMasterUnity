@@ -1,5 +1,6 @@
 using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -12,9 +13,15 @@ public class UserScore : MonoBehaviour
     public TextMeshProUGUI textScoreaccCSS;
     public TextMeshProUGUI textScoreSpeedHTMLCSS;
     public TextMeshProUGUI textScoreaccHTMLCSS;
+    public TextMeshProUGUI textScoreResult;
+    //img rank
+    public GameObject imgExcellent;
+    public GameObject imgGood;
+    public GameObject imgAverage;
+    public GameObject imgFair;
+    public GameObject imgPoor;
 
     private Connection connection;
-
     public void CallScoreMiniGameSpeedandACC()
     {
         connection = new Connection();
@@ -25,6 +32,9 @@ public class UserScore : MonoBehaviour
         StartCoroutine(ScoreMiniGameHTMLCSSSpeed());
         StartCoroutine(ScoreMiniGameHTMLCSSACC());
         StartCoroutine(StoryHTMLCSS());
+        StartCoroutine(ResultAll());
+        StartCoroutine(scoreResult());
+
     }
 
     ////////////////////////////////////////STORY////////////////////////////////////////////////////
@@ -161,6 +171,88 @@ public class UserScore : MonoBehaviour
         else
         {
             Debug.LogError("Failed to fetch HTML CSS ACC score: " + www.error);
+        }
+    }
+    //// saveResult all
+    ///
+    IEnumerator ResultAll()
+    {
+        UnityWebRequest www = UnityWebRequest.Get(connection.scoreall);
+        www.SetRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
+
+        yield return www.SendWebRequest();
+
+        if (www.result == UnityWebRequest.Result.Success)
+        {
+            string resultcallbacks = www.downloadHandler.text;
+            Debug.Log(resultcallbacks);
+        }
+        else
+        {
+            Debug.LogError("Failed to fetch username: " + www.error);
+        }
+    }
+
+    IEnumerator scoreResult()
+    {
+        UnityWebRequest www = UnityWebRequest.Get(connection.scoreResult);
+        www.SetRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
+
+        yield return www.SendWebRequest();
+
+        if (www.result == UnityWebRequest.Result.Success)
+        {
+            string resultcallback = www.downloadHandler.text;
+            textScoreResult.text = resultcallback;
+            imgRank(resultcallback);
+            Debug.Log(resultcallback);
+        }
+        else
+        {
+            Debug.LogError("Failed to fetch username: " + www.error);
+        }
+    }
+
+    public void imgRank(string rank) {
+        if (rank == "Excellent")
+        {
+            imgExcellent.SetActive(true);
+            imgGood.SetActive(false);
+            imgAverage.SetActive(false);
+            imgFair.SetActive(false);
+            imgPoor.SetActive(false);
+        }
+        else if(rank == "Good")
+        {
+            imgExcellent.SetActive(false);
+            imgGood.SetActive(true);
+            imgAverage.SetActive(false);
+            imgFair.SetActive(false);
+            imgPoor.SetActive(false);
+        }
+        else if (rank == "Average")
+        {
+            imgExcellent.SetActive(false);
+            imgGood.SetActive(false);
+            imgAverage.SetActive(true);
+            imgFair.SetActive(false);
+            imgPoor.SetActive(false);
+        }
+        else if (rank == "Fair")
+        {
+            imgExcellent.SetActive(false);
+            imgGood.SetActive(false);
+            imgAverage.SetActive(false);
+            imgFair.SetActive(true);
+            imgPoor.SetActive(false);
+        }
+        else
+        {
+            imgExcellent.SetActive(false);
+            imgGood.SetActive(false);
+            imgAverage.SetActive(false);
+            imgFair.SetActive(false);
+            imgPoor.SetActive(true);
         }
     }
 }

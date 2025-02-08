@@ -7,6 +7,8 @@ public class Connection
     public string loginLink = "https://webmastergame.shop/WebMaster/login.php";
     public string register = "https://webmastergame.shop/WebMaster/register.php";
     public string storyHTMLCSS = "https://webmastergame.shop/WebMaster/score/scoreStory.php";
+    public string scoreall = "https://webmastergame.shop/WebMaster/score/scoreall.php";
+    public string scoreResult = "https://webmastergame.shop/WebMaster/score/scoreresult.php";
     public string updateKey = "https://webmastergame.shop/WebMaster/addscore/updatekey.php";
     public string seeUsername = "https://webmastergame.shop/WebMaster/seeusername.php";
     public string seePassword = "https://webmastergame.shop/WebMaster/seepassword.php";

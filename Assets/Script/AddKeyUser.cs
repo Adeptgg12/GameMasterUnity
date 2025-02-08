@@ -68,9 +68,31 @@ public class AddKeyUser : MonoBehaviour
         }
         else if (number == 3)
         {
-            if (keyint < 3)
+            if (keyint < 4)
             {
                 Debug.Log("if3");
+                gift.SetActive(true);
+                keyint += 1;
+                Debug.Log(keyint);
+                StartCoroutine(UpdateKey());
+            }
+        }
+        else if (number == 4)
+        {
+            if (keyint < 5)
+            {
+                Debug.Log("if4");
+                gift.SetActive(true);
+                keyint += 1;
+                Debug.Log(keyint);
+                StartCoroutine(UpdateKey());
+            }
+        }
+        else if (number == 5)
+        {
+            if (keyint < 3)
+            {
+                Debug.Log("if5");
                 gift.SetActive(true);
                 keyint += 1;
                 Debug.Log(keyint);

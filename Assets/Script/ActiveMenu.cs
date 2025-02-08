@@ -16,6 +16,7 @@ public class ActiveMenu : MonoBehaviour
     public Button island2;
     public Button island3;
     public Button island4;
+    public Button BigislandHTMLCss;
 
     string keystr;
     private int keyint;
@@ -31,6 +32,15 @@ public class ActiveMenu : MonoBehaviour
         score.SetActive(false);
         islandonegamelist.SetActive(false);
         setting.SetActive(false);
+        if (keyint >= 6)
+        {
+            BigislandHTMLCss.interactable = true;
+            AudioSystem.Instance.PlaySFX("Sfx_click");
+        }
+        else
+        {
+            BigislandHTMLCss.interactable = false;
+        }
     }
 
     public async void Key()
@@ -61,6 +71,9 @@ public class ActiveMenu : MonoBehaviour
 
     public void ActiveIsland()
     {
+        //call story key
+        Key();
+        Debug.Log("keyint = " + keyint);
         if (activeMenuisland1.activeSelf != true && activeMenuisland2.activeSelf != true)
         {
             activeMenuisland1.SetActive(true);
@@ -71,6 +84,14 @@ public class ActiveMenu : MonoBehaviour
             setting.SetActive(false);
 
             AudioSystem.Instance.PlaySFX("Sfx_click");
+            if (keyint >= 6) {
+                BigislandHTMLCss.interactable = true;
+                AudioSystem.Instance.PlaySFX("Sfx_click");
+            }
+            else
+            {
+                BigislandHTMLCss.interactable = false;
+            }
         }
     }
 
@@ -119,18 +140,11 @@ public class ActiveMenu : MonoBehaviour
             setting.SetActive(false);
 
             AudioSystem.Instance.PlaySFX("Sfx_click");
-            if (keyint >= 2)
-            {
-                island2.interactable = true;
-            }
-            if (keyint >= 2)
-            {
-                island3.interactable = true;
-            }
-            if (keyint >= 2)
-            {
-                island4.interactable = true;
-            }
+            island2.interactable = keyint >= 2;
+            island3.interactable = keyint >= 3;
+            island4.interactable = keyint >= 5;
+
+
         }
     }
 

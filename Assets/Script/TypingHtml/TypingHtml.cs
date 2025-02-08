@@ -19,7 +19,6 @@ public class TypingHtml : MonoBehaviour
     public TextMeshProUGUI wpmIngame = null;
     public WordBank WordBank = null;
     private Connection connection;
-
     private float wpm;
     private float accuracy;
     private string remainingWord = string.Empty;
@@ -33,7 +32,8 @@ public class TypingHtml : MonoBehaviour
     private bool isGameActive = true;
     private bool isStart = false;
     private bool isCorrect = true;
-
+    private int keyint;
+    string keystr;
     private void Start()
     {
         if (WordBank == null)
@@ -260,6 +260,8 @@ public class TypingHtml : MonoBehaviour
         wpmOutput.text = wpm.ToString("F2");
         accuracyOutput.text = $"{accuracy:F2}";
         connection = new Connection();
+        
+        StartCoroutine(StoryHTMLCSS(5));
         StartCoroutine(UpdateBestScore(connection.scoreMiniGameHtmlSpeed, connection.UpdateSpeedHtml, wpm, accuracy));
     }
 
@@ -304,8 +306,66 @@ public class TypingHtml : MonoBehaviour
         }
     }
 
+    IEnumerator StoryHTMLCSS(int number)
+    {
+        // ใช้ UnityWebRequest และตั้งค่า header
+        UnityWebRequest www = UnityWebRequest.Get(connection.storyHTMLCSS);
+        www.SetRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
+
+        // รอให้คำขอเสร็จสิ้น
+        yield return www.SendWebRequest();
+
+        if (www.result == UnityWebRequest.Result.Success)
+        {
+            keystr = www.downloadHandler.text;
+            keyint = int.Parse(keystr);
+            CheckKey(number);
+        }
+        else
+        {
+            Debug.LogError("Request failed: " + www.error);
+        }
+    }
+    public void CheckKey(int number)
+    {
+        Debug.Log("number = " + number);
+        Debug.Log("keyint = " + keyint);
+
+        if (number == 5)
+        {
+            if (keyint < 3)
+            {
+                Debug.Log("if5");
+                keyint += 1;
+                Debug.Log(keyint);
+                StartCoroutine(UpdateKey());
+            }
+        }
+    }
+    IEnumerator UpdateKey()
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("StoryKeyValue", keyint);
+
+        // ใช้ UnityWebRequest และตั้งค่า header
+        UnityWebRequest www = UnityWebRequest.Post(connection.updateKey, form);
+        www.SetRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
+
+        // รอให้คำขอเสร็จสิ้น
+        yield return www.SendWebRequest();
+
+        if (www.result == UnityWebRequest.Result.Success)
+        {
+            Debug.Log(www.downloadHandler.text);
+        }
+        else
+        {
+            Debug.LogError("Request failed: " + www.error);
+        }
+    }
     public void LoadScene()
     {
+        
         UnityEngine.SceneManagement.SceneManager.LoadScene(3);
     }
 }
