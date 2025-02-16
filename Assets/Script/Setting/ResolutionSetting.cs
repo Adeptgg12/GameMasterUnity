@@ -52,7 +52,7 @@ public class ResolutionSetting : MonoBehaviour
                 return;
         }
 
-        SaveResolution(width, height, toggleFullscreen.isOn, resolutionDropDown.value);
+        SaveResolution(width, height, isFullscreen, resolutionDropDown.value);
     }
 
     private void SaveResolution(int width, int height, bool fullscreen, int dropDownValue)
