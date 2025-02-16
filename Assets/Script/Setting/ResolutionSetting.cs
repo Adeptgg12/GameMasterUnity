@@ -7,7 +7,6 @@ using UnityEngine.UI;
 public class ResolutionSetting : MonoBehaviour
 {
     [SerializeField] TMP_Dropdown resolutionDropDown;
-    [SerializeField] TMP_Text text;
     [SerializeField] Toggle toggleFullscreen;
     private bool isUpdating = false;
     [SerializeField] int width;
@@ -19,12 +18,19 @@ public class ResolutionSetting : MonoBehaviour
     }
     void Start()
     {
-        LoadResolution();
+        //LoadResolution();
     }
 
-    void OnEnable()
+    void Update()
     {
-        //LoadResolution(); // โหลดค่าทุกครั้งที่กลับมา Scene นี้
+        if (isFullscreen == true) {
+            resolutionDropDown.interactable = true;
+        }
+        else
+        {
+            resolutionDropDown.interactable = false;
+            resolutionDropDown.value = 1;
+        }
     }
 
     public void SetFullScreen()
@@ -71,7 +77,6 @@ public class ResolutionSetting : MonoBehaviour
     private void ApplyResolution(int width, int height, bool fullscreen)
     {
         Debug.Log($"Applying Resolution: {width}x{height}, Fullscreen: {fullscreen}");
-        text.text = $"Applying Resolution: {width}x{height}, Fullscreen: {fullscreen}";
 
         if (fullscreen)
         {
@@ -85,17 +90,29 @@ public class ResolutionSetting : MonoBehaviour
 
     private void LoadResolution()
     {
-        width = PlayerPrefs.GetInt("ResolutionWidth", 1920);
-        height = PlayerPrefs.GetInt("ResolutionHeight", 1080);
         isFullscreen = PlayerPrefs.GetInt("IsFullscreen", 1) == 1;
-        resolutionDropDown.value = PlayerPrefs.GetInt("DropDownValue", 0);
-
-        Debug.Log($"Loaded Resolution: {width}x{height}, Fullscreen: {isFullscreen}");
-
-        isUpdating = true;
         toggleFullscreen.isOn = isFullscreen;
-        isUpdating = false;
+        if (isFullscreen == true) {
+            width = PlayerPrefs.GetInt("ResolutionWidth", 1920);
+            height = PlayerPrefs.GetInt("ResolutionHeight", 1080);
+            
+            resolutionDropDown.value = PlayerPrefs.GetInt("DropDownValue", 0);
 
-        ApplyResolution(width, height, isFullscreen);
+            Debug.Log($"Loaded Resolution: {width}x{height}, Fullscreen: {isFullscreen}");
+
+            isUpdating = true;
+            isUpdating = false;
+
+            ApplyResolution(width, height, isFullscreen);
+        }
+        else
+        {
+            PlayerPrefs.SetInt("DropDownValue", 1);
+            PlayerPrefs.SetInt("ResolutionWidth", 1280);
+            PlayerPrefs.SetInt("ResolutionHeight", 720);
+            PlayerPrefs.Save();
+            Debug.Log($"Loaded Resolution: 1280x720, Fullscreen: {isFullscreen}");
+            ApplyResolution(1280, 720, isFullscreen);
+        }
     }
 }
