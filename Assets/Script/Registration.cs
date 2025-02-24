@@ -50,20 +50,22 @@ public class Registration : MonoBehaviour
                     form.AddField("Name", nameField.text);
                     form.AddField("Password", passwordField.text);
 
-                    // Using UnityWebRequest instead of WWW
+                    // ใช้ UnityWebRequest แทน WWW
                     UnityWebRequest www = UnityWebRequest.Post(connection.register, form);
 
-                    // Set the User-Agent header
+                    // ตั้งค่า User-Agent Header
                     www.SetRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
 
                     yield return www.SendWebRequest();
 
                     if (www.result == UnityWebRequest.Result.Success)
                     {
-                        string responseText = www.downloadHandler.text;
-                        Debug.Log(responseText);
-                        int result = int.Parse(responseText);
-                        if (result == 0)
+                        // ดึงข้อความตอบกลับจากเซิร์ฟเวอร์และ Trim ช่องว่าง
+                        string responseText = www.downloadHandler.text.Trim();
+
+                        Debug.Log("Response from server: " + responseText); // Log เพื่อตรวจสอบค่า
+
+                        if (responseText == "a")
                         {
                             Debug.Log("User create successful");
                             StartCoroutine(registerWarning.registerSuc("User create successful"));
@@ -73,18 +75,15 @@ public class Registration : MonoBehaviour
                             passwordField.interactable = false;
                             ConpasswordField.interactable = false;
                         }
+                        else if (responseText == "Name already exit")
+                        {
+                            Debug.Log("Username already exists");
+                            StartCoroutine(registerWarning.cooldown("UserName Already exist!!"));
+                        }
                         else
                         {
-                            Debug.Log("User create fail" + www.downloadHandler.text);
-                            if (www.downloadHandler.text == "Name already exit")
-                            {
-                                StartCoroutine(registerWarning.cooldown("UserName Already exist!!"));
-                            }
-                            else
-                            {
-                                Debug.Log("User create fail ===>" + www.downloadHandler.text);
-                                StartCoroutine(registerWarning.cooldown("User create fail!!"));
-                            }
+                            Debug.LogError("User creation failed, unexpected response: " + responseText);
+                            StartCoroutine(registerWarning.cooldown("User create fail!!"));
                         }
                     }
                     else
@@ -94,24 +93,23 @@ public class Registration : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("password more than 8 word");
-                    StartCoroutine(registerWarning.cooldown("Password more than 8 word"));
+                    Debug.Log("Password must be at least 8 characters");
+                    StartCoroutine(registerWarning.cooldown("Password must be at least 8 characters"));
                 }
-
             }
             else
             {
-                StartCoroutine(registerWarning.cooldown("Password not match"));
-                Debug.Log("Password not match");
+                Debug.Log("Passwords do not match");
+                StartCoroutine(registerWarning.cooldown("Passwords do not match"));
             }
-
         }
         else
         {
-            StartCoroutine(registerWarning.cooldown("Username more than 4 word"));
-            Debug.Log("Username not valid");
+            Debug.Log("Username must be at least 4 characters");
+            StartCoroutine(registerWarning.cooldown("Username must be at least 4 characters"));
         }
     }
+
 
     public void loadScene(int a)
     {
